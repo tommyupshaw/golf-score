@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>⛳ Golf Score</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a120e;--surface:#111c16;--card:#162019;--card2:#1a2820;
+  --green:#2ecc71;--lime:#a3e635;--gold:#f5c518;--red:#e74c3c;--blue:#60a5fa;
+  --text:#e8f5e9;--muted:#6b8f70;--border:#1e3325;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.wrap{max-width:500px;margin:0 auto;padding-bottom:90px;}
+.page{display:none;}
+.page.active{display:block;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── COMMON ── */
+.logo{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.1em;color:var(--lime);}
+.logo small{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.3em;font-family:'Noto Sans JP',sans-serif;font-weight:300;}
+.sec-label{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.2em;color:var(--muted);
+  margin:0 16px 10px;display:flex;align-items:center;gap:8px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.pad{padding:0 16px;}
+select,input[type="text"],input[type="number"]{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);padding:9px 12px;font-size:.9rem;font-family:'Noto Sans JP',sans-serif;outline:none;}
+select:focus,input:focus{border-color:var(--green);}
+select{width:100%;height:42px;margin-bottom:16px;}
+.btn-main{width:100%;background:linear-gradient(135deg,var(--green),var(--lime));color:#0a120e;
+  border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;box-shadow:0 4px 18px #2ecc7140;}
+.btn-main:active{opacity:.9;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+
+/* ── SETUP ── */
+.setup-header{padding:24px 20px 16px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.player-row{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:10px 12px;margin-bottom:8px;display:flex;gap:8px;align-items:center;}
+.p-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;
+  align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;}
+.player-row input[type="text"]{flex:1;}
+.del-btn{background:transparent;border:1px solid var(--border);color:var(--muted);
+  border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:.85rem;flex-shrink:0;}
+.add-btn{width:100%;border:1px dashed var(--border);background:transparent;color:var(--muted);
+  border-radius:10px;padding:10px;font-size:.85rem;cursor:pointer;margin-bottom:12px;
+  font-family:'Noto Sans JP',sans-serif;}
+.add-btn:hover{border-color:var(--green);color:var(--green);}
+
+/* ── PAR INPUT PAGE ── */
+.par-preset-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);
+  border-radius:8px;padding:7px 14px;font-size:.78rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+.par-preset-btn:active{background:var(--border);color:var(--text);}
+.par-section-label{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;
+  color:var(--muted);padding:4px 0 8px;display:flex;align-items:center;gap:8px;}
+.par-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.par-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;margin-bottom:8px;}
+.par-cell{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.par-cell-label{font-size:.58rem;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:.05em;}
+.par-stepper{display:flex;flex-direction:column;align-items:center;background:var(--surface);
+  border-radius:6px;width:100%;}
+.par-up,.par-dn{background:transparent;border:none;color:var(--muted);font-size:.7rem;
+  cursor:pointer;padding:2px 0;width:100%;text-align:center;-webkit-tap-highlight-color:transparent;line-height:1.2;}
+.par-up:active,.par-dn:active{background:var(--border);}
+.par-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--lime);padding:2px 0;
+  width:100%;text-align:center;}
+.par-subtotal-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;
+  border-top:1px solid var(--border);}
+.par-subtotal-label{font-size:.7rem;color:var(--muted);letter-spacing:.1em;font-family:'Bebas Neue',sans-serif;}
+.par-subtotal-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);}
+
+
+.hcp-page-header{padding:20px 16px 14px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.hcp-page-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--lime);}
+.hcp-page-sub{font-size:.75rem;color:var(--muted);margin-top:4px;line-height:1.5;}
+.hcp-note{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;margin:0 16px 14px;font-size:.75rem;color:var(--muted);line-height:1.6;}
+.hcp-note b{color:var(--text);}
+.hcp-player-block{margin:0 16px 16px;}
+.hcp-player-title{font-weight:700;font-size:.9rem;margin-bottom:8px;padding:8px 10px;
+  background:var(--card);border-radius:8px;display:flex;align-items:center;gap:8px;}
+.hcp-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;}
+.hcp-cell{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.hcp-cell-label{font-size:.72rem;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:.05em;}
+.hcp-cell-btns{display:flex;flex-direction:column;gap:1px;width:100%;}
+.hcp-up,.hcp-dn{background:var(--surface);border:1px solid var(--border);color:var(--muted);
+  border-radius:4px;font-size:.65rem;cursor:pointer;padding:2px 0;width:100%;text-align:center;
+  -webkit-tap-highlight-color:transparent;}
+.hcp-up:active,.hcp-dn:active{background:var(--border);}
+.hcp-val{font-family:'Bebas Neue',sans-serif;font-size:.95rem;min-width:26px;
+  text-align:center;padding:3px 0;border-radius:4px;}
+.hcp-pos{color:var(--green);}   /* + = P1 receives (good for P1) */
+.hcp-neg{color:var(--red);}    /* - = P1 gives (bad for P1) */
+.hcp-zero{color:var(--muted);}
+
+/* ── SCORE ENTRY PAGE (player-by-player) ── */
+.se-header{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:14px 16px 0;position:sticky;top:0;z-index:10;}
+.se-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.se-page-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--lime);letter-spacing:.1em;}
+.se-total-badge{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--lime);}
+.se-total-badge small{font-size:.7rem;color:var(--muted);font-family:'Noto Sans JP',sans-serif;margin-left:2px;}
+
+/* Player tabs */
+.player-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);}
+.player-tab{flex:1;padding:9px 4px;text-align:center;font-size:.78rem;font-weight:700;
+  color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
+  transition:color .15s,border-color .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.player-tab.active{color:var(--lime);border-bottom-color:var(--lime);}
+
+/* Hole list */
+.hole-list{padding:10px 14px;display:flex;flex-direction:column;gap:0;}
+.hole-section-label{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;
+  color:var(--muted);padding:8px 0 6px;display:flex;align-items:center;gap:8px;}
+.hole-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.hole-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)22;}
+.hole-row:last-child{border-bottom:none;}
+.hole-info{display:flex;flex-direction:column;width:44px;flex-shrink:0;}
+.hole-num-label{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--lime);line-height:1;}
+.hole-par-label{font-size:.6rem;color:var(--muted);}
+.hole-hcp-label{font-size:.6rem;color:var(--blue);min-height:.8rem;}
+.score-stepper{display:flex;align-items:center;background:var(--surface);
+  border-radius:10px;overflow:hidden;flex:1;}
+.step-btn{width:44px;height:44px;background:transparent;border:none;color:var(--text);
+  font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.step-btn:active{background:var(--border);}
+.step-val{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--text);}
+.score-badge{width:56px;text-align:center;flex-shrink:0;}
+.sbadge{font-size:.62rem;font-weight:700;padding:2px 4px;border-radius:4px;
+  letter-spacing:.06em;display:inline-block;width:100%;text-align:center;}
+.sb-eagle{background:#f5c51820;color:var(--gold);}
+.sb-birdie{background:#2ecc7120;color:var(--green);}
+.sb-par{background:#ffffff08;color:var(--muted);}
+.sb-bogey{background:#e74c3c10;color:#e9807099;}
+.sb-double{background:#e74c3c20;color:var(--red);}
+.sb-over{background:#e74c3c35;color:var(--red);}
+
+/* subtotal row */
+.subtotal-row{display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;margin-top:4px;border-top:1px solid var(--border);}
+.subtotal-label{font-size:.7rem;color:var(--muted);letter-spacing:.1em;font-family:'Bebas Neue',sans-serif;}
+.subtotal-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);}
+
+/* bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;
+  background:var(--surface);border-top:1px solid var(--border);padding:10px 14px;display:flex;gap:10px;z-index:20;}
+.btn-prev-p{background:var(--card);border:1px solid var(--border);color:var(--muted);
+  border-radius:10px;padding:12px 16px;font-size:1.1rem;cursor:pointer;flex-shrink:0;}
+.btn-next-p{flex:1;background:linear-gradient(135deg,var(--green),var(--lime));color:#0a120e;
+  border:none;border-radius:10px;padding:12px;font-weight:700;font-size:.92rem;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;}
+.btn-next-p:active{opacity:.9;}
+
+/* ── RESULT ── */
+.res-wrap{padding:16px;}
+.res-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.15em;color:var(--lime);}
+.res-sub{font-size:.75rem;color:var(--muted);margin-bottom:18px;}
+.rank-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.rank-n{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;width:36px;text-align:center;flex-shrink:0;}
+.r1{color:var(--gold);}.r2{color:#aaa;}.r3{color:#cd7f32;}.r4{color:var(--muted);}
+.rank-info{flex:1;}
+.rank-name{font-weight:700;font-size:.95rem;}
+.rank-det{font-size:.72rem;color:var(--muted);margin-top:3px;}
+.rank-score{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--lime);text-align:right;}
+.rank-score small{display:block;font-size:.65rem;color:var(--muted);font-family:'Noto Sans JP',sans-serif;}
+.match-vs-block{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:14px;margin-bottom:10px;}
+.match-vs-name{font-weight:700;font-size:.9rem;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.match-3cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.match-col{background:var(--surface);border-radius:10px;padding:10px 8px;text-align:center;}
+.match-col-title{font-size:.65rem;color:var(--muted);letter-spacing:.1em;margin-bottom:8px;font-family:'Bebas Neue',sans-serif;}
+.wld-trio{display:flex;justify-content:center;gap:4px;}
+.wbadge{width:30px;height:30px;border-radius:7px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;line-height:1;}
+.wbadge span{font-size:.48rem;font-family:'Noto Sans JP',sans-serif;margin-top:1px;}
+.wb-w{background:#2ecc7115;color:var(--green);border:1px solid #2ecc7130;}
+.wb-d{background:#ffffff08;color:var(--muted);border:1px solid var(--border);}
+.wb-l{background:#e74c3c10;color:#e74c3c80;border:1px solid #e74c3c20;}
+.match-result-tag{display:block;margin-top:8px;font-weight:700;
+  padding:6px 8px;border-radius:6px;text-align:center;line-height:1.3;}
+.mrt-win{background:#2ecc7122;color:var(--green);border:1px solid #2ecc7130;}
+.mrt-lose{background:#e74c3c18;color:var(--red);border:1px solid #e74c3c30;}
+.mrt-draw{background:#ffffff08;color:var(--muted);border:1px solid var(--border);font-size:.72rem;padding:8px;}
+.mrt-win-label{display:block;font-size:.55rem;letter-spacing:.15em;opacity:.8;font-weight:400;}
+.mrt-winner{display:block;font-size:.75rem;letter-spacing:.02em;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mrt-up{display:block;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.05em;}
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-top:10px;}
+table{width:100%;border-collapse:collapse;min-width:300px;}
+th{background:var(--surface);padding:7px 4px;text-align:center;color:var(--muted);font-weight:400;
+  border-bottom:1px solid var(--border);font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:.78rem;}
+td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--border);font-size:.76rem;}
+tr:last-child td{border-bottom:none;}
+.td-h{color:var(--muted);font-size:.68rem;}
+.td-p{color:var(--muted);}
+.td-eagle{color:var(--gold);font-weight:700;}
+.td-birdie{color:var(--green);font-weight:700;}
+.td-bogey{color:#e98080;}
+.td-double{color:var(--red);font-weight:700;}
+.td-gross{font-family:'Bebas Neue',sans-serif;font-size:.95rem;color:var(--lime);}
+.td-hcp{font-size:.68rem;color:var(--blue);}
+.tr-sep td{border-top:2px solid var(--border);}
+.btn-recalc{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);
+  border-radius:10px;padding:12px;font-size:.88rem;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;margin-top:4px;margin-bottom:4px;}
+.btn-edit-score{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);
+  border-radius:10px;padding:10px;font-size:.85rem;font-weight:700;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;margin-bottom:16px;}
+.btn-edit-score:active{background:var(--border);}
+.btn-restart{width:100%;background:var(--border);color:var(--text);border:none;border-radius:12px;
+  padding:14px;font-size:.95rem;font-weight:700;margin-top:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══ SETUP ══ -->
+<div id="page-setup" class="page active">
+  <div class="setup-header">
+    <div class="logo">GOLF<small>SCORE TRACKER</small></div>
+  </div>
+  <div class="sec-label">プレイヤー</div>
+  <div class="pad">
+    <div id="player-list"></div>
+    <button class="add-btn" id="add-btn" onclick="addPlayer()">＋ プレイヤーを追加（最大8名）</button>
+    <button class="btn-main" onclick="goToPar()">次へ：PAR入力 →</button>
+  </div>
+</div>
+
+<!-- ══ PAR INPUT ══ -->
+<div id="page-par" class="page">
+  <div class="hcp-page-header">
+    <div class="hcp-page-title">コースPAR入力</div>
+    <div class="hcp-page-sub">各ホールのPARを設定してください</div>
+  </div>
+  <div class="pad" style="margin-bottom:12px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="par-preset-btn" onclick="applyParPreset([4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4])">全PAR4 (72)</button>
+      <button class="par-preset-btn" onclick="applyParPreset([4,4,3,4,5,3,4,5,4,4,4,3,4,5,3,4,5,4])">標準 (72)</button>
+    </div>
+  </div>
+  <div class="par-grid-wrap pad">
+    <div class="par-section-label">OUT</div>
+    <div class="par-grid" id="par-grid-out"></div>
+    <div class="par-subtotal-row">
+      <span class="par-subtotal-label">OUT PAR</span>
+      <span class="par-subtotal-val" id="par-out-total">—</span>
+    </div>
+    <div class="par-section-label" style="margin-top:12px">IN</div>
+    <div class="par-grid" id="par-grid-in"></div>
+    <div class="par-subtotal-row">
+      <span class="par-subtotal-label">IN PAR</span>
+      <span class="par-subtotal-val" id="par-in-total">—</span>
+    </div>
+    <div class="par-subtotal-row" style="border-top:2px solid var(--border);margin-top:4px;padding-top:8px">
+      <span class="par-subtotal-label" style="color:var(--lime)">TOTAL PAR</span>
+      <span class="par-subtotal-val" style="color:var(--lime);font-size:1.5rem" id="par-total">—</span>
+    </div>
+  </div>
+  <div class="pad" style="margin-top:16px;">
+    <button class="btn-main" onclick="goToHcp()">次へ：ハンデ入力 →</button>
+    <div style="height:8px"></div>
+    <button style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);
+      border-radius:10px;padding:12px;font-size:.85rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;"
+      onclick="showPage('page-setup')">← プレイヤー設定に戻る</button>
+  </div>
+</div>
+
+<!-- ══ HANDICAP ══ -->
+<div id="page-hcp" class="page">
+  <div class="hcp-page-header">
+    <div class="hcp-page-title">ホール別ハンデ入力</div>
+    <div class="hcp-page-sub">プレイヤー1 vs 各プレイヤーのホール別ハンデを設定</div>
+  </div>
+  <div class="hcp-note">
+    <b style="color:var(--green)">プラス（＋）</b>：P1がハンデをもらう（有利）<br>
+    <b style="color:var(--red)">マイナス（−）</b>：P1がハンデを与える（不利）　／　0.5刻み
+  </div>
+  <div id="hcp-blocks"></div>
+  <div class="pad" style="margin-top:8px;">
+    <button class="btn-main" onclick="goToScore()">⛳ スコア入力へ →</button>
+    <div style="height:8px"></div>
+    <button style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);
+      border-radius:10px;padding:12px;font-size:.85rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;"
+      onclick="showPage('page-par')">← PAR入力に戻る</button>
+  </div>
+</div>
+
+<!-- ══ SCORE ENTRY ══ -->
+<div id="page-score" class="page">
+  <div class="se-header">
+    <div class="se-title-row">
+      <div>
+        <div class="se-page-title" id="se-player-name">プレイヤー1</div>
+        <div style="font-size:.68rem;color:var(--muted)" id="se-player-sub"></div>
+      </div>
+      <div class="se-total-badge"><span id="se-total">0</span><small>打</small></div>
+    </div>
+    <div class="player-tabs" id="player-tabs"></div>
+  </div>
+  <div class="hole-list" id="hole-list"></div>
+  <div class="bottom-nav">
+    <button class="btn-prev-p" id="btn-prev-p" onclick="prevPlayer()">‹</button>
+    <button class="btn-next-p" id="btn-next-p" onclick="nextPlayer()">次のプレイヤー →</button>
+  </div>
+</div>
+
+<!-- ══ RESULT ══ -->
+<div id="page-result" class="page">
+  <div class="res-wrap">
+    <div class="res-title">RESULT</div>
+    <div class="res-sub" id="res-sub"></div>
+    <div id="ranking"></div>
+    <div class="divider"></div>
+    <div class="sec-label" style="margin-left:0" id="res-hcp-title">ホール別ハンデ</div>
+    <div style="font-size:.72rem;color:var(--muted);padding:0 0 10px;line-height:1.6" id="res-hcp-note"></div>
+    <div id="res-hcp-blocks"></div>
+    <button class="btn-recalc" onclick="recalcFromResult()">ハンデを変更して再計算 →</button>
+    <div class="divider"></div>
+    <div class="sec-label" style="margin-left:0">マッチプレイ（P1 vs 各プレイヤー）</div>
+    <div id="match-section"></div>
+    <div class="divider"></div>
+    <div class="sec-label" style="margin-left:0">スコアカード</div>
+    <div class="table-wrap"><table id="sc-table"></table></div>
+    <button class="btn-edit-score" onclick="goBackToScore()">✏️ スコアを修正する</button>
+    <button class="btn-restart" onclick="restart()">🔄 もう一度プレイ</button>
+  </div>
+</div>
+
+</div>
+<script>
+// ═══════════════ STATE ═══════════════
+const PC = ['#a3e635','#60a5fa','#f87171','#fbbf24','#c084fc','#34d399','#fb923c','#e879f9'];
+const BASE_PARS = [4,4,4,4,4,4,4,4,4, 4,4,4,4,4,4,4,4,4];
+
+let players = [];
+let hcpPerHole = [];   // [oppIdx][holeIdx]  oppIdx=0 → players[1]
+let scores = [];       // [playerIdx][holeIdx]
+let pars = [];
+let totalHoles = 18;
+let holeOffset = 0;
+let curPlayer = 0;     // which player tab is active in score entry
+
+// ═══════════════ SETUP ═══════════════
+function initSetup() {
+  players = [{ name: '自分' }, { name: 'プレイヤー2' }];
+  pars = [...BASE_PARS];
+  renderPlayers();
+}
+function renderPlayers() {
+  document.getElementById('player-list').innerHTML = players.map((p, i) => `
+    <div class="player-row">
+      <div class="p-dot" style="background:${PC[i]}22;color:${PC[i]}">${i+1}</div>
+      <input type="text" value="${p.name}" placeholder="名前" oninput="players[${i}].name=this.value;refreshTabName(${i})">
+      ${players.length > 2 && i > 0
+        ? `<button class="del-btn" onclick="removePlayer(${i})">✕</button>` : ''}
+    </div>`).join('');
+  document.getElementById('add-btn').style.display = players.length >= 8 ? 'none' : '';
+}
+function addPlayer() {
+  if (players.length >= 8) return;
+  players.push({ name: `プレイヤー${players.length + 1}` });
+  renderPlayers();
+}
+function removePlayer(i) { players.splice(i, 1); renderPlayers(); }
+
+// ═══════════════ PAR INPUT ═══════════════
+function goToPar() {
+  // Initialize pars to default if first time, else keep existing
+  if (!pars || pars.length !== 18) pars = [...BASE_PARS];
+  renderParPage();
+  showPage('page-par');
+}
+
+function renderParPage() {
+  ['out','in'].forEach((sec, si) => {
+    const start = si * 9;
+    document.getElementById(`par-grid-${sec}`).innerHTML =
+      Array.from({ length: 9 }, (_, i) => {
+        const h = start + i;
+        return `<div class="par-cell">
+          <div class="par-cell-label">${h + 1}</div>
+          <div class="par-stepper">
+            <button class="par-up" onclick="chgPar(${h},1)">＋</button>
+            <div class="par-val" id="pv-${h}">${pars[h]}</div>
+            <button class="par-dn" onclick="chgPar(${h},-1)">−</button>
+          </div>
+        </div>`;
+      }).join('');
+  });
+  updateParTotals();
+}
+
+function chgPar(h, delta) {
+  pars[h] = Math.min(6, Math.max(3, pars[h] + delta));
+  document.getElementById(`pv-${h}`).textContent = pars[h];
+  updateParTotals();
+}
+
+function applyParPreset(preset) {
+  pars = [...preset];
+  renderParPage();
+}
+
+function updateParTotals() {
+  const outP = pars.slice(0, 9).reduce((a, b) => a + b, 0);
+  const inP  = pars.slice(9).reduce((a, b) => a + b, 0);
+  document.getElementById('par-out-total').textContent = outP;
+  document.getElementById('par-in-total').textContent = inP;
+  document.getElementById('par-total').textContent = outP + inP;
+}
+
+// ═══════════════ HANDICAP ═══════════════
+function goToHcp() {
+  totalHoles = 18; holeOffset = 0;
+  // pars already set by PAR input page; fall back to default if somehow empty
+  if (!pars || pars.length !== 18) pars = [...BASE_PARS];
+  const nOpp = players.length - 1;
+  hcpPerHole = Array.from({ length: nOpp }, () => new Array(18).fill(0));
+  renderHcpPage('hcp-blocks');
+  showPage('page-hcp');
+}
+
+function renderHcpPage(containerId) {
+  const nOpp = players.length - 1;
+  let html = '';
+
+  // Result page: update the section note
+  const noteEl = document.getElementById('res-hcp-note');
+  if (containerId === 'res-hcp-blocks' && noteEl) {
+    noteEl.innerHTML = `<b style="color:var(--green)">プラス（＋）</b>：${players[0].name} がハンデをもらう　／　<b style="color:var(--red)">マイナス（−）</b>：${players[0].name} がハンデを与える`;
+  }
+
+  for (let oi = 0; oi < nOpp; oi++) {
+    const oppName = players[oi + 1].name;
+    const color = PC[oi + 1];
+    const outN = totalHoles === 18 ? 9 : totalHoles;
+    const inN  = totalHoles === 18 ? 9 : 0;
+    html += `<div class="hcp-player-block">
+      <div class="hcp-player-title">
+        <div class="p-dot" style="background:${color}22;color:${color};width:22px;height:22px;font-size:.85rem">${oi+2}</div>
+        <span style="color:${color};font-weight:700">${oppName}</span>
+        <span style="font-size:.65rem;color:var(--muted);font-weight:400;margin-left:2px">のハンデ</span>
+        <span style="font-size:.6rem;color:var(--green);font-weight:400;margin-left:4px">（+で${players[0].name}がもらう）</span>
+      </div>
+      <div class="hcp-grid">`;
+    for (let h = 0; h < outN; h++) html += hcpCellHTML(oi, h, containerId);
+    if (inN > 0) {
+      html += `</div><div style="height:4px"></div>
+        <div style="font-size:.6rem;color:var(--muted);letter-spacing:.15em;font-family:'Bebas Neue',sans-serif;margin-bottom:4px">IN</div>
+        <div class="hcp-grid">`;
+      for (let h = 9; h < 18; h++) html += hcpCellHTML(oi, h, containerId);
+    }
+    html += `</div></div>`;
+  }
+  document.getElementById(containerId).innerHTML = html;
+}
+
+function hcpCellHTML(oi, h, pfx) {
+  const holeNum = h + holeOffset + 1;
+  const v = hcpPerHole[oi][h];
+  const cls = v > 0 ? 'hcp-pos' : v < 0 ? 'hcp-neg' : 'hcp-zero';
+  return `<div class="hcp-cell">
+    <div class="hcp-cell-label">${holeNum}</div>
+    <div class="hcp-cell-btns"><button class="hcp-up" onclick="chgHcp(${oi},${h},0.5,'${pfx}')">＋</button></div>
+    <div class="hcp-val ${cls}" id="${pfx}-hv-${oi}-${h}">${formatHcp(v)}</div>
+    <div class="hcp-cell-btns"><button class="hcp-dn" onclick="chgHcp(${oi},${h},-0.5,'${pfx}')">−</button></div>
+  </div>`;
+}
+
+function formatHcp(v) {
+  if (v === 0) return '0';
+  const sign = v > 0 ? '+' : '−';
+  const abs = Math.abs(v);
+  return sign + (Number.isInteger(abs) ? abs : abs.toFixed(1));
+}
+
+function chgHcp(oi, h, delta, pfx) {
+  hcpPerHole[oi][h] = Math.round((hcpPerHole[oi][h] + delta) * 2) / 2;
+  const v = hcpPerHole[oi][h];
+  // Update all instances of this cell (hcp page + result page may both exist)
+  ['hcp-blocks', 'res-hcp-blocks'].forEach(id => {
+    const el = document.getElementById(`${id}-hv-${oi}-${h}`);
+    if (el) {
+      el.textContent = formatHcp(v);
+      el.className = 'hcp-val ' + (v > 0 ? 'hcp-pos' : v < 0 ? 'hcp-neg' : 'hcp-zero');
+    }
+  });
+  // Refresh hcp label on score page if visible
+  const hcpLbl = document.getElementById(`hl-${curPlayer}-${h}`);
+  if (hcpLbl) refreshHcpLabel(curPlayer, h);
+}
+
+// ═══════════════ SCORE ENTRY ═══════════════
+function goToScore() {
+  scores = players.map(() => new Array(totalHoles).fill(null));
+  curPlayer = 0;
+  renderScoreEntry();
+  showPage('page-score');
+}
+
+function renderScoreEntry() {
+  const p = players[curPlayer];
+  const color = PC[curPlayer];
+
+  // Header
+  document.getElementById('se-player-name').textContent = p.name;
+  document.getElementById('se-player-name').style.color = color;
+  const sub = curPlayer === 0 ? 'P1（基準プレイヤー）' : `vs ${players[0].name}`;
+  document.getElementById('se-player-sub').textContent = sub;
+
+  // Tabs
+  document.getElementById('player-tabs').innerHTML = players.map((pl, i) => `
+    <div class="player-tab ${i === curPlayer ? 'active' : ''}"
+      style="${i === curPlayer ? `color:${PC[i]};border-bottom-color:${PC[i]}` : ''}"
+      onclick="switchPlayer(${i})">${pl.name}</div>`).join('');
+
+  // Prev/Next buttons
+  document.getElementById('btn-prev-p').style.visibility = curPlayer === 0 ? 'hidden' : '';
+  const isLast = curPlayer === players.length - 1;
+  document.getElementById('btn-next-p').textContent = isLast ? '結果を見る 🏁' : `次: ${players[curPlayer + 1].name} →`;
+
+  // Hole list
+  renderHoleList();
+}
+
+function renderHoleList() {
+  const isP1 = curPlayer === 0;
+  const outN = totalHoles === 18 ? 9 : totalHoles;
+  const inN  = totalHoles === 18 ? 9 : 0;
+
+  let html = '';
+
+  function holeRowHTML(h) {
+    const holeNum = h + holeOffset + 1;
+    const par = pars[h];
+    const val = scores[curPlayer][h] !== null ? scores[curPlayer][h] : par;
+    const hv = !isP1 ? hcpPerHole[curPlayer - 1][h] : 0;
+    const hcpStr = hv !== 0 ? formatHcp(hv) : '';
+    const hcpColor = hv > 0 ? 'var(--green)' : 'var(--red)';
+    return `<div class="hole-row">
+      <div class="hole-info">
+        <div class="hole-num-label">${holeNum}</div>
+        <div class="hole-par-label">PAR ${par}</div>
+        <div class="hole-hcp-label" id="hl-${curPlayer}-${h}" style="color:${hcpColor}">${hcpStr}</div>
+      </div>
+      <div class="score-stepper">
+        <button class="step-btn" onclick="chgScore(${h},-1)">−</button>
+        <div class="step-val ${stepValClass(val, par)}" id="sv-${h}">${val}</div>
+        <button class="step-btn" onclick="chgScore(${h},1)">＋</button>
+      </div>
+      <div class="score-badge">
+        <span class="sbadge ${sbClass(val, par)}" id="sb-${h}">${sbLabel(val, par)}</span>
+      </div>
+    </div>`;
+  }
+
+  // OUT section
+  if (totalHoles === 18) html += `<div class="hole-section-label">OUT</div>`;
+  else if (holeOffset === 0) html += `<div class="hole-section-label">OUT</div>`;
+  else html += `<div class="hole-section-label">IN</div>`;
+
+  for (let h = 0; h < outN; h++) html += holeRowHTML(h);
+
+  const outTotal = scores[curPlayer].slice(0, outN).reduce((a, v, i) => a + (v ?? pars[i]), 0);
+  html += `<div class="subtotal-row">
+    <div class="subtotal-label">OUT 小計</div>
+    <div class="subtotal-val" id="out-sub">${outTotal}</div>
+  </div>`;
+
+  if (inN > 0) {
+    html += `<div class="hole-section-label" style="margin-top:8px">IN</div>`;
+    for (let h = 9; h < 18; h++) html += holeRowHTML(h);
+    const inTotal = scores[curPlayer].slice(9).reduce((a, v, i) => a + (v ?? pars[i + 9]), 0);
+    html += `<div class="subtotal-row">
+      <div class="subtotal-label">IN 小計</div>
+      <div class="subtotal-val" id="in-sub">${inTotal}</div>
+    </div>`;
+  }
+
+  document.getElementById('hole-list').innerHTML = html;
+  updateTotal();
+}
+
+function refreshHcpLabel(pi, h) {
+  const el = document.getElementById(`hl-${pi}-${h}`);
+  if (!el || pi === 0) return;
+  const hv = hcpPerHole[pi - 1][h];
+  el.textContent = hv !== 0 ? formatHcp(hv) : '';
+  el.style.color = hv > 0 ? 'var(--green)' : 'var(--red)';
+}
+
+function chgScore(h, delta) {
+  const par = pars[h];
+  const cur = scores[curPlayer][h] !== null ? scores[curPlayer][h] : par;
+  scores[curPlayer][h] = Math.max(1, cur + delta);
+  const val = scores[curPlayer][h];
+  document.getElementById(`sv-${h}`).textContent = val;
+  document.getElementById(`sv-${h}`).className = 'step-val ' + stepValClass(val, par);
+  document.getElementById(`sb-${h}`).textContent = sbLabel(val, par);
+  document.getElementById(`sb-${h}`).className = 'sbadge ' + sbClass(val, par);
+  updateTotal();
+}
+
+function updateTotal() {
+  const outN = totalHoles === 18 ? 9 : totalHoles;
+  const inN  = totalHoles === 18 ? 9 : 0;
+  const outTotal = scores[curPlayer].slice(0, outN).reduce((a, v, i) => a + (v ?? pars[i]), 0);
+  const inTotal  = inN > 0 ? scores[curPlayer].slice(9).reduce((a, v, i) => a + (v ?? pars[i + 9]), 0) : 0;
+  const total = outTotal + inTotal;
+  document.getElementById('se-total').textContent = total;
+  const outEl = document.getElementById('out-sub');
+  if (outEl) outEl.textContent = outTotal;
+  const inEl = document.getElementById('in-sub');
+  if (inEl) inEl.textContent = inTotal;
+}
+
+function switchPlayer(i) {
+  // Save filled-in scores for current player before switching
+  curPlayer = i;
+  renderScoreEntry();
+}
+
+function prevPlayer() {
+  if (curPlayer > 0) { curPlayer--; renderScoreEntry(); }
+}
+
+function nextPlayer() {
+  if (curPlayer < players.length - 1) {
+    curPlayer++;
+    renderScoreEntry();
+  } else {
+    buildResult();
+    showPageKeepScore('page-result');
+  }
+}
+
+function refreshTabName(i) {
+  const tabs = document.querySelectorAll('.player-tab');
+  if (tabs[i]) tabs[i].textContent = players[i].name;
+}
+
+// ═══════════════ SCORE HELPERS ═══════════════
+function stepValClass(s, par) {
+  const d = s - par;
+  if (d <= -1) return 'style="color:var(--green)"';
+  if (d === 0) return '';
+  if (d >= 2)  return 'style="color:var(--red)"';
+  return 'style="color:#e98080"';
+}
+function sbLabel(s, par) {
+  const d = s - par;
+  if (d <= -2) return 'EAGLE';
+  if (d === -1) return 'BIRDIE';
+  if (d === 0)  return 'PAR';
+  if (d === 1)  return 'BOGEY';
+  if (d === 2)  return 'DBL';
+  return `+${d}`;
+}
+function sbClass(s, par) {
+  const d = s - par;
+  if (d <= -2) return 'sb-eagle';
+  if (d === -1) return 'sb-birdie';
+  if (d === 0)  return 'sb-par';
+  if (d === 1)  return 'sb-bogey';
+  if (d === 2)  return 'sb-double';
+  return 'sb-over';
+}
+function tdClass(s, par) {
+  const d = s - par;
+  if (d <= -2) return 'td-eagle';
+  if (d === -1) return 'td-birdie';
+  if (d === 0)  return '';
+  if (d === 1)  return 'td-bogey';
+  return 'td-double';
+}
+
+// ═══════════════ EFFECTIVE SCORE ═══════════════
+// hcpPerHole[oi][h] convention (NEW):
+//   + = P1 receives strokes (P1 is weaker) → subtract from P1's raw score
+//   - = opponent receives strokes (P1 is stronger) → subtract from opponent's raw score
+function effectiveScore(pi, oi, h) {
+  const raw = scores[pi][h] !== null ? scores[pi][h] : pars[h];
+  const hcp = hcpPerHole[oi][h];
+  if (pi === 0) {
+    // P1 gets strokes when hcp > 0
+    return raw - Math.max(0, hcp);
+  } else {
+    // Opponent gets strokes when hcp < 0 (i.e. |hcp| strokes to opp)
+    return raw - Math.max(0, -hcp);
+  }
+}
+
+// ═══════════════ RESULT ═══════════════
+function buildResult() {
+  const totalPar = pars.reduce((a, b) => a + b, 0);
+  const data = players.map((p, i) => {
+    const g = scores[i].reduce((a, v, h) => a + (v ?? pars[h]), 0);
+    return { ...p, gross: g, diff: g - totalPar, idx: i };
+  }).sort((a, b) => a.gross - b.gross);
+
+  document.getElementById('res-sub').textContent =
+    `${totalHoles}ホール ／ PAR ${totalPar} ／ ${players.length}名`;
+
+  const medals = ['🥇','🥈','🥉'];
+  const rcls = ['r1','r2','r3','r4'];
+  document.getElementById('ranking').innerHTML = data.map((p, r) => `
+    <div class="rank-card">
+      <div class="rank-n ${rcls[Math.min(r,3)]}">${medals[r] || r+1}</div>
+      <div class="rank-info">
+        <div class="rank-name" style="color:${PC[p.idx]}">${p.name}</div>
+        <div class="rank-det">グロス: ${p.gross}（${p.diff >= 0 ? '+'+p.diff : p.diff}）</div>
+      </div>
+      <div class="rank-score">${p.gross}<small>gross</small></div>
+    </div>`).join('');
+
+  // Handicap section
+  renderHcpPage('res-hcp-blocks');
+
+  // Match play
+  const numOpp = players.length - 1;
+  let matchHTML = '';
+  for (let oi = 0; oi < numOpp; oi++) {
+    const oppName = players[oi + 1].name;
+    const color = PC[oi + 1];
+
+    function rangeWLD(from, to) {
+      let w = 0, l = 0, d = 0;
+      for (let h = from; h <= to; h++) {
+        const ep1 = effectiveScore(0, oi, h);
+        const eopp = effectiveScore(oi + 1, oi, h);
+        if (ep1 < eopp) w++; else if (ep1 > eopp) l++; else d++;
+      }
+      return { w, l, d };
+    }
+
+    function sectionResult(w, l, d) {
+      const p1Name = players[0].name;
+      if (w > l) {
+        const up = w - l;
+        return `<div class="match-result-tag mrt-win">
+          <span class="mrt-win-label">WIN</span>
+          <span class="mrt-winner">${p1Name}</span>
+          <span class="mrt-up">${up}up</span></div>`;
+      }
+      if (l > w) {
+        const up = l - w;
+        return `<div class="match-result-tag mrt-lose">
+          <span class="mrt-win-label">WIN</span>
+          <span class="mrt-winner">${oppName}</span>
+          <span class="mrt-up">${up}up</span></div>`;
+      }
+      return `<div class="match-result-tag mrt-draw">DRAW</div>`;
+    }
+
+    let sections;
+    if (totalHoles === 18) {
+      sections = [
+        { title: 'OUT', from: 0, to: 8 },
+        { title: 'IN',  from: 9, to: 17 },
+        { title: 'TOTAL', from: 0, to: 17 },
+      ];
+    } else {
+      const lbl = holeOffset === 0 ? 'OUT' : 'IN';
+      sections = [
+        { title: lbl, from: 0, to: totalHoles - 1 },
+        { title: 'TOTAL', from: 0, to: totalHoles - 1 },
+      ];
+    }
+
+    matchHTML += `<div class="match-vs-block">
+      <div class="match-vs-name">
+        <span style="color:var(--muted);font-size:.8rem;font-weight:400">対</span>
+        <div class="p-dot" style="background:${color}22;color:${color};width:22px;height:22px;font-size:.85rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;">${oi+2}</div>
+        <span style="color:${color}">${oppName}</span>
+        <span style="font-size:.7rem;color:var(--muted);font-weight:400;margin-left:2px">（${players[0].name} 目線）</span>
+      </div>
+      <div class="match-3cols" style="grid-template-columns:${sections.map(() => '1fr').join(' ')}">`;
+    sections.forEach(sec => {
+      const { w, l, d } = rangeWLD(sec.from, sec.to);
+      matchHTML += `<div class="match-col">
+        <div class="match-col-title">${sec.title}</div>
+        <div class="wld-trio">
+          <div class="wbadge wb-w">${w}<span>勝</span></div>
+          <div class="wbadge wb-d">${d}<span>分</span></div>
+          <div class="wbadge wb-l">${l}<span>負</span></div>
+        </div>
+        ${sectionResult(w, l, d)}
+      </div>`;
+    });
+    matchHTML += `</div></div>`;
+  }
+  document.getElementById('match-section').innerHTML = matchHTML;
+
+  // Scorecard table
+  // Pre-compute hole-by-hole win/loss for each opponent vs P1
+  // holeResult[oi][h] = 'p1win' | 'oppwin' | 'draw'
+  const numOpp2 = players.length - 1;
+  const holeResult = Array.from({ length: numOpp2 }, (_, oi) =>
+    Array.from({ length: totalHoles }, (_, h) => {
+      const ep1 = effectiveScore(0, oi, h);
+      const eopp = effectiveScore(oi + 1, oi, h);
+      return ep1 < eopp ? 'p1win' : ep1 > eopp ? 'oppwin' : 'draw';
+    })
+  );
+
+  let t = '<thead><tr><th>HOLE</th><th>PAR</th>';
+  players.forEach((p, i) => t += `<th style="color:${PC[i]}">${p.name}</th>`);
+  t += '</tr></thead><tbody>';
+
+  for (let h = 0; h < totalHoles; h++) {
+    const isSep = h === 9;
+    t += `<tr${isSep ? ' class="tr-sep"' : ''}>`;
+    t += `<td class="td-h">${h + 1}</td><td class="td-p">${pars[h]}</td>`;
+
+    players.forEach((_, i) => {
+      const s = scores[i][h] ?? pars[h];
+      // HCP tag for opponent columns
+      let hcpTag = '';
+      if (i > 0) {
+        const hv = hcpPerHole[i - 1][h];
+        if (hv !== 0) {
+          // + = P1 receives (green), - = opp receives (red)
+          const hcpColor = hv > 0 ? 'color:var(--green)' : 'color:var(--red)';
+          hcpTag = `<span style="font-size:.58rem;${hcpColor};display:block;line-height:1">(${formatHcp(hv)})</span>`;
+        }
+      }
+      // Color logic:
+      // P1 column (i===0): always white (var(--text))
+      // Opponent column (i>0): green if P1 won that hole vs this opponent, red if P1 lost, white if draw
+      let cellStyle = '';
+      if (i === 0) {
+        cellStyle = ' style="color:var(--text)"';
+      } else {
+        const oi = i - 1;
+        const r = holeResult[oi][h];
+        if (r === 'p1win')   cellStyle = ' style="color:var(--green);font-weight:700"';
+        else if (r === 'oppwin') cellStyle = ' style="color:var(--red);font-weight:700"';
+        else                 cellStyle = ' style="color:var(--text)"';
+      }
+      t += `<td${cellStyle}>${s}${hcpTag}</td>`;
+    });
+    t += '</tr>';
+  }
+
+  // OUT/IN subtotals
+  t += `<tr style="background:var(--surface)"><td class="td-h" colspan="2" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:.8rem">OUT</td>`;
+  players.forEach((_, i) => {
+    const s = scores[i].slice(0,9).reduce((a,v,h)=>a+(v??pars[h]),0);
+    t += `<td class="td-gross">${s}</td>`;
+  });
+  t += `</tr><tr style="background:var(--surface)"><td class="td-h" colspan="2" style="color:var(--blue);font-family:'Bebas Neue',sans-serif;font-size:.8rem">IN</td>`;
+  players.forEach((_, i) => {
+    const s = scores[i].slice(9).reduce((a,v,h)=>a+(v??pars[h+9]),0);
+    t += `<td class="td-gross">${s}</td>`;
+  });
+  t += '</tr>';
+  t += `<tr class="tr-sep"><td colspan="2" style="color:var(--muted);font-size:.68rem;letter-spacing:.1em">GROSS</td>`;
+  players.forEach((_, i) => {
+    const g = scores[i].reduce((a, v, h) => a + (v ?? pars[h]), 0);
+    t += `<td class="td-gross">${g}</td>`;
+  });
+  t += '</tr></tbody>';
+  document.getElementById('sc-table').innerHTML = t;
+}
+
+function goBackToScore() {
+  // Restore score page from hidden state and show it
+  const scorePage = document.getElementById('page-score');
+  scorePage.style.display = '';
+  showPage('page-score');
+  renderScoreEntry();
+}
+
+function recalcFromResult() {
+  buildResult();
+  window.scrollTo(0, 0);
+}
+
+function restart() { initSetup(); showPage('page-setup'); }
+
+function showPageKeepScore(id) {
+  // Hide all pages except score page (keep it in DOM but hidden)
+  document.querySelectorAll('.page').forEach(p => {
+    if (p.id === 'page-score') {
+      p.classList.remove('active');
+      p.style.display = 'none';
+    } else {
+      p.classList.remove('active');
+      p.style.display = '';
+    }
+  });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    p.style.display = '';
+  });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+initSetup();
+</script>
+</body>
+</html>
