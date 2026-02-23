@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/tommy/Downloads/index_1.html -->
+<!-- saved from url=(0045)file:///C:/Users/tommy/Downloads/index_6.html -->
 <html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -74,63 +74,71 @@ select{width:100%;height:42px;margin-bottom:16px;}
 
 
 .hcp-page-header{padding:20px 16px 14px;border-bottom:1px solid var(--border);margin-bottom:8px;}
-.hcp-page-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--lime);}
-.hcp-page-sub{font-size:.75rem;color:var(--muted);margin-top:4px;line-height:1.5;}
+.hcp-page-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.1em;color:var(--lime);}
+.hcp-page-sub{font-size:.9rem;color:var(--muted);margin-top:4px;line-height:1.5;}
 .hcp-note{background:var(--card);border:1px solid var(--border);border-radius:10px;
-  padding:10px 14px;margin:0 16px 14px;font-size:.75rem;color:var(--muted);line-height:1.6;}
+  padding:10px 14px;margin:0 16px 14px;font-size:.85rem;color:var(--muted);line-height:1.6;}
 .hcp-note b{color:var(--text);}
-.hcp-player-block{margin:0 16px 16px;}
-.hcp-player-title{font-weight:700;font-size:.9rem;margin-bottom:8px;padding:8px 10px;
-  background:var(--card);border-radius:8px;display:flex;align-items:center;gap:8px;}
-.hcp-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;}
-.hcp-cell{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.hcp-cell-label{font-size:.72rem;color:var(--muted);font-family:'Bebas Neue',sans-serif;letter-spacing:.05em;}
-.hcp-cell-btns{display:flex;flex-direction:column;gap:1px;width:100%;}
-.hcp-up,.hcp-dn{background:var(--surface);border:1px solid var(--border);color:var(--muted);
-  border-radius:4px;font-size:.65rem;cursor:pointer;padding:2px 0;width:100%;text-align:center;
-  -webkit-tap-highlight-color:transparent;}
-.hcp-up:active,.hcp-dn:active{background:var(--border);}
-.hcp-val{font-family:'Bebas Neue',sans-serif;font-size:.95rem;min-width:26px;
-  text-align:center;padding:3px 0;border-radius:4px;}
-.hcp-pos{color:var(--green);}   /* + = P1 receives (good for P1) */
-.hcp-neg{color:var(--red);}    /* - = P1 gives (bad for P1) */
-.hcp-zero{color:var(--muted);}
+/* ── HANDICAP INPUT - 縦レイアウト ── */
+.hcp-table-wrap{overflow-x:auto;margin:0 16px 20px;}
+.hcp-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+.hcp-table th{background:var(--surface);padding:8px 3px;text-align:center;
+  font-size:.9rem;font-weight:700;border-bottom:2px solid var(--border);
+  border-right:1px solid var(--border);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hcp-table th.th-hole{width:44px;font-family:'Bebas Neue',sans-serif;font-size:.95rem;
+  letter-spacing:.05em;color:var(--muted);}
+.hcp-table th.th-player{font-family:'Noto Sans JP',sans-serif;}
+.hcp-table td{padding:4px 2px;text-align:center;border-bottom:1px solid var(--border)11;
+  border-right:1px solid var(--border)22;}
+.hcp-table tr.tr-out-sep td{border-top:2px solid var(--border);}
+.hcp-table td.td-hole{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;
+  color:var(--muted);background:var(--surface);}
+.hcp-stepper{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:3px;}
+.hcp-sv{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;min-width:32px;
+  text-align:center;line-height:1.2;}
+.hcp-sb{display:flex;justify-content:center;}
+.hcp-sb button{background:var(--surface);border:1px solid var(--border);color:var(--text);
+  border-radius:4px;font-size:1rem;cursor:pointer;padding:6px 9px;
+  -webkit-tap-highlight-color:transparent;line-height:1;font-weight:700;}
+.hcp-sb button:active{background:var(--border);}
+.hcp-group-label{font-size:.72rem;color:var(--muted);padding:8px 16px 4px;
+  font-family:'Bebas Neue',sans-serif;letter-spacing:.15em;}
 
 /* ── SCORE ENTRY PAGE (player-by-player) ── */
 .se-header{background:var(--surface);border-bottom:1px solid var(--border);
   padding:14px 16px 0;position:sticky;top:0;z-index:10;}
 .se-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.se-page-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--lime);letter-spacing:.1em;}
-.se-total-badge{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--lime);}
-.se-total-badge small{font-size:.7rem;color:var(--muted);font-family:'Noto Sans JP',sans-serif;margin-left:2px;}
+.se-page-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--lime);letter-spacing:.1em;}
+.se-total-badge{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--lime);}
+.se-total-badge small{font-size:.85rem;color:var(--muted);font-family:'Noto Sans JP',sans-serif;margin-left:2px;}
 
 /* Player tabs */
 .player-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);}
-.player-tab{flex:1;padding:9px 4px;text-align:center;font-size:.78rem;font-weight:700;
+.player-tab{flex:1;padding:9px 4px;text-align:center;font-size:.88rem;font-weight:700;
   color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
   transition:color .15s,border-color .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .player-tab.active{color:var(--lime);border-bottom-color:var(--lime);}
 
 /* Hole list */
 .hole-list{padding:10px 14px;display:flex;flex-direction:column;gap:0;}
-.hole-section-label{font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.2em;
+.hole-section-label{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;
   color:var(--muted);padding:8px 0 6px;display:flex;align-items:center;gap:8px;}
 .hole-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.hole-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)22;}
+.hole-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)22;}
 .hole-row:last-child{border-bottom:none;}
-.hole-info{display:flex;flex-direction:column;width:44px;flex-shrink:0;}
-.hole-num-label{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--lime);line-height:1;}
-.hole-par-label{font-size:.6rem;color:var(--muted);}
-.hole-hcp-label{font-size:.6rem;color:var(--blue);min-height:.8rem;}
+.hole-info{display:flex;flex-direction:column;width:50px;flex-shrink:0;}
+.hole-num-label{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--lime);line-height:1;}
+.hole-par-label{font-size:.75rem;color:var(--muted);}
+.hole-hcp-label{font-size:.72rem;color:var(--blue);min-height:.9rem;}
 .score-stepper{display:flex;align-items:center;background:var(--surface);
   border-radius:10px;overflow:hidden;flex:1;}
-.step-btn{width:44px;height:44px;background:transparent;border:none;color:var(--text);
-  font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+.step-btn{width:48px;height:48px;background:transparent;border:none;color:var(--text);
+  font-size:1.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
   -webkit-tap-highlight-color:transparent;flex-shrink:0;}
 .step-btn:active{background:var(--border);}
-.step-val{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--text);}
-.score-badge{width:56px;text-align:center;flex-shrink:0;}
-.sbadge{font-size:.62rem;font-weight:700;padding:2px 4px;border-radius:4px;
+.step-val{flex:1;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);}
+.score-badge{width:62px;text-align:center;flex-shrink:0;}
+.sbadge{font-size:.75rem;font-weight:700;padding:3px 4px;border-radius:4px;
   letter-spacing:.06em;display:inline-block;width:100%;text-align:center;}
 .sb-eagle{background:#f5c51820;color:var(--gold);}
 .sb-birdie{background:#2ecc7120;color:var(--green);}
@@ -142,78 +150,78 @@ select{width:100%;height:42px;margin-bottom:16px;}
 /* subtotal row */
 .subtotal-row{display:flex;justify-content:space-between;align-items:center;
   padding:8px 0;margin-top:4px;border-top:1px solid var(--border);}
-.subtotal-label{font-size:.7rem;color:var(--muted);letter-spacing:.1em;font-family:'Bebas Neue',sans-serif;}
-.subtotal-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);}
+.subtotal-label{font-size:.85rem;color:var(--muted);letter-spacing:.1em;font-family:'Bebas Neue',sans-serif;}
+.subtotal-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);}
 
 /* bottom nav */
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:500px;
   background:var(--surface);border-top:1px solid var(--border);padding:10px 14px;display:flex;gap:10px;z-index:20;}
 .btn-prev-p{background:var(--card);border:1px solid var(--border);color:var(--muted);
-  border-radius:10px;padding:12px 16px;font-size:1.1rem;cursor:pointer;flex-shrink:0;}
+  border-radius:10px;padding:12px 16px;font-size:1.2rem;cursor:pointer;flex-shrink:0;}
 .btn-next-p{flex:1;background:linear-gradient(135deg,var(--green),var(--lime));color:#0a120e;
-  border:none;border-radius:10px;padding:12px;font-weight:700;font-size:.92rem;cursor:pointer;
+  border:none;border-radius:10px;padding:12px;font-weight:700;font-size:1rem;cursor:pointer;
   font-family:'Noto Sans JP',sans-serif;}
 .btn-next-p:active{opacity:.9;}
 
 /* ── RESULT ── */
 .res-wrap{padding:16px;}
-.res-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.15em;color:var(--lime);}
-.res-sub{font-size:.75rem;color:var(--muted);margin-bottom:18px;}
+.res-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.15em;color:var(--lime);}
+.res-sub{font-size:.88rem;color:var(--muted);margin-bottom:18px;}
 .rank-card{background:var(--card);border:1px solid var(--border);border-radius:14px;
   padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
-.rank-n{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;width:36px;text-align:center;flex-shrink:0;}
+.rank-n{font-family:'Bebas Neue',sans-serif;font-size:2rem;width:36px;text-align:center;flex-shrink:0;}
 .r1{color:var(--gold);}.r2{color:#aaa;}.r3{color:#cd7f32;}.r4{color:var(--muted);}
 .rank-info{flex:1;}
-.rank-name{font-weight:700;font-size:.95rem;}
-.rank-det{font-size:.72rem;color:var(--muted);margin-top:3px;}
-.rank-score{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--lime);text-align:right;}
-.rank-score small{display:block;font-size:.65rem;color:var(--muted);font-family:'Noto Sans JP',sans-serif;}
+.rank-name{font-weight:700;font-size:1.05rem;}
+.rank-det{font-size:.85rem;color:var(--muted);margin-top:3px;}
+.rank-score{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--lime);text-align:right;}
+.rank-score small{display:block;font-size:.75rem;color:var(--muted);font-family:'Noto Sans JP',sans-serif;}
 .match-vs-block{background:var(--card);border:1px solid var(--border);border-radius:14px;
   padding:14px;margin-bottom:10px;}
-.match-vs-name{font-weight:700;font-size:.9rem;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.match-vs-name{font-weight:700;font-size:1rem;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .match-3cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
-.match-col{background:var(--surface);border-radius:10px;padding:10px 8px;text-align:center;}
-.match-col-title{font-size:.65rem;color:var(--muted);letter-spacing:.1em;margin-bottom:8px;font-family:'Bebas Neue',sans-serif;}
-.wld-trio{display:flex;justify-content:center;gap:4px;}
-.wbadge{width:30px;height:30px;border-radius:7px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.9rem;line-height:1;}
-.wbadge span{font-size:.48rem;font-family:'Noto Sans JP',sans-serif;margin-top:1px;}
+.match-col{background:var(--surface);border-radius:10px;padding:8px 4px;text-align:center;}
+.match-col-title{font-size:1.56rem;color:var(--muted);letter-spacing:.1em;margin-bottom:6px;font-family:'Bebas Neue',sans-serif;}
+.wld-trio{display:flex;justify-content:center;gap:3px;}
+.wbadge{width:32px;height:32px;border-radius:6px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;}
+.wbadge span{font-size:.55rem;font-family:'Noto Sans JP',sans-serif;margin-top:1px;}
 .wb-w{background:#2ecc7115;color:var(--green);border:1px solid #2ecc7130;}
 .wb-d{background:#ffffff08;color:var(--muted);border:1px solid var(--border);}
 .wb-l{background:#e74c3c10;color:#e74c3c80;border:1px solid #e74c3c20;}
-.match-result-tag{display:block;margin-top:8px;font-weight:700;
-  padding:6px 8px;border-radius:6px;text-align:center;line-height:1.3;}
+.match-result-tag{display:block;margin-top:6px;font-weight:700;
+  padding:5px 4px;border-radius:6px;text-align:center;line-height:1.2;}
 .mrt-win{background:#2ecc7122;color:var(--green);border:1px solid #2ecc7130;}
 .mrt-lose{background:#e74c3c18;color:var(--red);border:1px solid #e74c3c30;}
-.mrt-draw{background:#ffffff08;color:var(--muted);border:1px solid var(--border);font-size:.72rem;padding:8px;}
-.mrt-win-label{display:block;font-size:.55rem;letter-spacing:.15em;opacity:.8;font-weight:400;}
-.mrt-winner{display:block;font-size:.75rem;letter-spacing:.02em;font-weight:700;
+.mrt-draw{background:#ffffff08;color:var(--muted);border:1px solid var(--border);font-size:.85rem;padding:8px;}
+.mrt-win-label{display:block;font-size:.62rem;letter-spacing:.1em;opacity:.8;font-weight:400;}
+.mrt-winner{display:block;font-size:.78rem;font-weight:700;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.mrt-up{display:block;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.05em;}
+.mrt-up{display:block;font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.05em;line-height:1.1;}
 .table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-top:10px;}
 table{width:100%;border-collapse:collapse;min-width:300px;}
-th{background:var(--surface);padding:7px 4px;text-align:center;color:var(--muted);font-weight:400;
-  border-bottom:1px solid var(--border);font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:.78rem;}
-td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--border);font-size:.76rem;}
+th{background:var(--surface);padding:8px 4px;text-align:center;color:var(--muted);font-weight:400;
+  border-bottom:1px solid var(--border);font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:.88rem;}
+td{padding:7px 3px;text-align:center;border-bottom:1px solid var(--border);font-size:.88rem;}
 tr:last-child td{border-bottom:none;}
-.td-h{color:var(--muted);font-size:.68rem;}
+.td-h{color:var(--muted);font-size:.82rem;}
 .td-p{color:var(--muted);}
 .td-eagle{color:var(--gold);font-weight:700;}
 .td-birdie{color:var(--green);font-weight:700;}
 .td-bogey{color:#e98080;}
 .td-double{color:var(--red);font-weight:700;}
-.td-gross{font-family:'Bebas Neue',sans-serif;font-size:.95rem;color:var(--lime);}
-.td-hcp{font-size:.68rem;color:var(--blue);}
+.td-gross{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--lime);}
+.td-hcp{font-size:.78rem;color:var(--blue);}
 .tr-sep td{border-top:2px solid var(--border);}
 .btn-recalc{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);
-  border-radius:10px;padding:12px;font-size:.88rem;font-weight:700;cursor:pointer;
+  border-radius:10px;padding:13px;font-size:.95rem;font-weight:700;cursor:pointer;
   font-family:'Noto Sans JP',sans-serif;margin-top:4px;margin-bottom:4px;}
 .btn-edit-score{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);
-  border-radius:10px;padding:10px;font-size:.85rem;font-weight:700;cursor:pointer;
+  border-radius:10px;padding:12px;font-size:.92rem;font-weight:700;cursor:pointer;
   font-family:'Noto Sans JP',sans-serif;margin-bottom:16px;}
 .btn-edit-score:active{background:var(--border);}
 .btn-restart{width:100%;background:var(--border);color:var(--text);border:none;border-radius:12px;
-  padding:14px;font-size:.95rem;font-weight:700;margin-top:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
+  padding:14px;font-size:1rem;font-weight:700;margin-top:20px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;}
 </style>
 </head>
 <body>
@@ -284,7 +292,7 @@ tr:last-child td{border-bottom:none;}
 <div id="page-hcp" class="page">
   <div class="hcp-page-header">
     <div class="hcp-page-title">ホール別ハンデ入力</div>
-    <div class="hcp-page-sub">プレイヤー1 vs 各プレイヤーのホール別ハンデを設定</div>
+    <div class="hcp-page-sub">各ホールのハンデを設定（+で${players[0] ? players[0].name : 'P1'}がもらう）</div>
   </div>
   <div class="hcp-note">
     <b style="color:var(--green)">プラス（＋）</b>：P1がハンデをもらう（有利）<br>
@@ -438,46 +446,52 @@ function renderHcpPage(containerId) {
   const nOpp = players.length - 1;
   let html = '';
 
-  // Result page: update the section note
+  // Result page note
   const noteEl = document.getElementById('res-hcp-note');
   if (containerId === 'res-hcp-blocks' && noteEl) {
     noteEl.innerHTML = `<b style="color:var(--green)">プラス（＋）</b>：${players[0].name} がハンデをもらう　／　<b style="color:var(--red)">マイナス（−）</b>：${players[0].name} がハンデを与える`;
   }
 
-  for (let oi = 0; oi < nOpp; oi++) {
-    const oppName = players[oi + 1].name;
-    const color = PC[oi + 1];
-    const outN = totalHoles === 18 ? 9 : totalHoles;
-    const inN  = totalHoles === 18 ? 9 : 0;
-    html += `<div class="hcp-player-block">
-      <div class="hcp-player-title">
-        <div class="p-dot" style="background:${color}22;color:${color};width:22px;height:22px;font-size:.85rem">${oi+2}</div>
-        <span style="color:${color};font-weight:700">${oppName}</span>
-        <span style="font-size:.65rem;color:var(--muted);font-weight:400;margin-left:2px">のハンデ</span>
-        <span style="font-size:.6rem;color:var(--green);font-weight:400;margin-left:4px">（+で${players[0].name}がもらう）</span>
-      </div>
-      <div class="hcp-grid">`;
-    for (let h = 0; h < outN; h++) html += hcpCellHTML(oi, h, containerId);
-    if (inN > 0) {
-      html += `</div><div style="height:4px"></div>
-        <div style="font-size:.6rem;color:var(--muted);letter-spacing:.15em;font-family:'Bebas Neue',sans-serif;margin-bottom:4px">IN</div>
-        <div class="hcp-grid">`;
-      for (let h = 9; h < 18; h++) html += hcpCellHTML(oi, h, containerId);
+  // Split opponents into groups of 4 (P2-5, P6-8)
+  for (let gStart = 0; gStart < nOpp; gStart += 4) {
+    const gEnd = Math.min(gStart + 4, nOpp); // exclusive
+    const groupOpps = Array.from({ length: gEnd - gStart }, (_, i) => gStart + i); // [0,1,2,3] etc
+
+    if (gStart > 0) html += `<div class="hcp-group-label">▼ プレイヤー ${gStart + 2}〜${gEnd + 1}</div>`;
+
+    html += `<div class="hcp-table-wrap"><table class="hcp-table"><thead><tr>
+      <th class="th-hole">H</th>`;
+    groupOpps.forEach(oi => {
+      const color = PC[oi + 1];
+      html += `<th class="th-player" style="color:${color}">${players[oi+1].name}<span style="font-size:.58rem;color:var(--muted);font-weight:400;display:block">のハンデ</span></th>`;
+    });
+    html += `</tr></thead><tbody>`;
+
+    for (let h = 0; h < 18; h++) {
+      const isSep = h === 9;
+      html += `<tr${isSep ? ' class="tr-out-sep"' : ''}>`;
+      const holeLabel = h === 0 ? `<span style="font-size:.6rem;color:var(--gold);display:block;line-height:1">OUT</span>${h+1}` :
+                        h === 9 ? `<span style="font-size:.6rem;color:var(--blue);display:block;line-height:1">IN</span>${h+1}` :
+                        `${h+1}`;
+      html += `<td class="td-hole">${holeLabel}</td>`;
+      groupOpps.forEach(oi => {
+        html += `<td>${hcpCellHTML(oi, h, containerId)}</td>`;
+      });
+      html += `</tr>`;
     }
-    html += `</div></div>`;
+    html += `</tbody></table></div>`;
   }
+
   document.getElementById(containerId).innerHTML = html;
 }
 
 function hcpCellHTML(oi, h, pfx) {
-  const holeNum = h + holeOffset + 1;
   const v = hcpPerHole[oi][h];
-  const cls = v > 0 ? 'hcp-pos' : v < 0 ? 'hcp-neg' : 'hcp-zero';
-  return `<div class="hcp-cell">
-    <div class="hcp-cell-label">${holeNum}</div>
-    <div class="hcp-cell-btns"><button class="hcp-up" onclick="chgHcp(${oi},${h},0.5,'${pfx}')">＋</button></div>
-    <div class="hcp-val ${cls}" id="${pfx}-hv-${oi}-${h}">${formatHcp(v)}</div>
-    <div class="hcp-cell-btns"><button class="hcp-dn" onclick="chgHcp(${oi},${h},-0.5,'${pfx}')">−</button></div>
+  const cls = v > 0 ? 'color:var(--green)' : v < 0 ? 'color:var(--red)' : 'color:var(--muted)';
+  return `<div class="hcp-stepper">
+    <div class="hcp-sb"><button onclick="chgHcp(${oi},${h},-0.5,'${pfx}')">−</button></div>
+    <div class="hcp-sv" style="${cls}" id="${pfx}-hv-${oi}-${h}">${formatHcp(v)}</div>
+    <div class="hcp-sb"><button onclick="chgHcp(${oi},${h},0.5,'${pfx}')">＋</button></div>
   </div>`;
 }
 
@@ -491,15 +505,14 @@ function formatHcp(v) {
 function chgHcp(oi, h, delta, pfx) {
   hcpPerHole[oi][h] = Math.round((hcpPerHole[oi][h] + delta) * 2) / 2;
   const v = hcpPerHole[oi][h];
-  // Update all instances of this cell (hcp page + result page may both exist)
+  const col = v > 0 ? 'color:var(--green)' : v < 0 ? 'color:var(--red)' : 'color:var(--muted)';
   ['hcp-blocks', 'res-hcp-blocks'].forEach(id => {
     const el = document.getElementById(`${id}-hv-${oi}-${h}`);
     if (el) {
       el.textContent = formatHcp(v);
-      el.className = 'hcp-val ' + (v > 0 ? 'hcp-pos' : v < 0 ? 'hcp-neg' : 'hcp-zero');
+      el.style.cssText = col;
     }
   });
-  // Refresh hcp label on score page if visible
   const hcpLbl = document.getElementById(`hl-${curPlayer}-${h}`);
   if (hcpLbl) refreshHcpLabel(curPlayer, h);
 }
@@ -754,14 +767,14 @@ function buildResult() {
         return `<div class="match-result-tag mrt-win">
           <span class="mrt-win-label">WIN</span>
           <span class="mrt-winner">${p1Name}</span>
-          <span class="mrt-up">${up}up</span></div>`;
+          <span class="mrt-up">${up} UP</span></div>`;
       }
       if (l > w) {
         const up = l - w;
         return `<div class="match-result-tag mrt-lose">
           <span class="mrt-win-label">WIN</span>
           <span class="mrt-winner">${oppName}</span>
-          <span class="mrt-up">${up}up</span></div>`;
+          <span class="mrt-up">${up} UP</span></div>`;
       }
       return `<div class="match-result-tag mrt-draw">DRAW</div>`;
     }
@@ -796,7 +809,7 @@ function buildResult() {
         <div class="wld-trio">
           <div class="wbadge wb-w">${w}<span>勝</span></div>
           <div class="wbadge wb-d">${d}<span>分</span></div>
-          <div class="wbadge wb-l">${l}<span>負</span></div>
+          <div class="wbadge wb-l">${l}<span>敗</span></div>
         </div>
         ${sectionResult(w, l, d)}
       </div>`;
